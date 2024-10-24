@@ -58,7 +58,11 @@ export class AuthController {
       res.status(200).redirect(`${CONFIG.FRONT_URL}/terms-of-use`);
     } catch (error) {
       if (error instanceof Error) {
-        res.status(400).json({ message: error.message });
+        if (error.message === "Invalid or expired token") {
+          res.status(400).redirect(`${CONFIG.FRONT_URL}`);
+        } else {
+          res.status(400).json({ message: error.message });
+        }
       } else {
         res.status(500).json({ message: "An unexpected error occurred" });
       }
