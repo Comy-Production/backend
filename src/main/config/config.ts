@@ -10,7 +10,7 @@ export const CONFIG = {
   GMAIL_USER: process.env.GMAIL_USER,
   GMAIL_PASS: process.env.GMAIL_PASS,
 
-  BASIC_PLAN_PRICE_ID: "price_1Q4EKPI6nAuCGeztX9VXBXL7",
+  BASIC_PLAN_PRICE_ID: "price_1QDIprAqPA4phloSd3dp82S5",
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || "",
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || "",
 
