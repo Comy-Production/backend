@@ -162,4 +162,21 @@ export class AuthController {
       }
     }
   }
+
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      const cookieOptions = {
+        httpOnly: true,
+        secure: CONFIG.NODE_ENV === "production",
+        sameSite: "strict" as const,
+      };
+      res.clearCookie(CONFIG.ACCESS_TOKEN_COOKIE_NAME, cookieOptions);
+      res.clearCookie(CONFIG.REFRESH_TOKEN_COOKIE_NAME, cookieOptions);
+      res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      }
+    }
+  }
 }
