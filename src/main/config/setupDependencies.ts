@@ -10,6 +10,7 @@ import { BusinessSheetRepository } from "../../infra/repo/BusinessSheetRepositor
 import { BusinessSheetController } from "../../presentation/controllers/BusinessSheetController";
 import { AWSImageUploadService } from "../../infra/services/AWSImageUploadService";
 import { AuthUseCase } from "../../application/use-cases/auth/AuthUseCase";
+import { BusinessSheetImageUploader } from "../../application/use-cases/business-sheet/BusinessSheetImageUploader";
 import { CreateBusinessSheetUseCase } from "../../application/use-cases/business-sheet/CreateBusinessSheetUseCase";
 import { EditBusinessSheetUseCase } from "../../application/use-cases/business-sheet/EditBusinessSheetUseCase";
 import { GetBusinessSheetUseCase } from "../../application/use-cases/business-sheet/GetBusinessSheetUseCase";
@@ -28,6 +29,27 @@ import { StripeService } from "../../infra/services/StripeService";
 import { WebhookController } from "../../presentation/controllers/WebhookController";
 import { CheckSubscriptionStatusUseCase } from "../../application/use-cases/users/CheckSubscriptionStatusUseCase";
 import { CheckSubscriptionStatusController } from "../../presentation/controllers/CheckSubscriptionStatusController";
+
+import { BulkEmailSender } from "../../infra/services/BulkEmailSender";
+import { ActiveUsersFetcher } from "../../infra/services/ActiveUsersFetcher";
+import { SendActiveUsersEmailUseCase } from "../../application/use-cases/users/SendActiveUsersEmailUseCase";
+import { ActiveUsersEmailController } from "../../presentation/controllers/ActiveUsersEmailController";
+
+
+
+const emailSender = new BulkEmailSender();
+const activeUsersFetcher = new ActiveUsersFetcher();
+
+const sendActiveUsersEmailUseCase = new SendActiveUsersEmailUseCase(
+  activeUsersFetcher,
+  emailSender
+);
+
+export const activeUsersEmailController = new ActiveUsersEmailController(
+  sendActiveUsersEmailUseCase
+);
+
+
 
 export function setupDependencies() {
   const userRepository = new MongoUserRepository();
@@ -48,13 +70,16 @@ export function setupDependencies() {
   const businessSheetRepository = new BusinessSheetRepository();
   const imageUploadService = new AWSImageUploadService();
 
+  
+  const businessSheetImageUploader = new BusinessSheetImageUploader(imageUploadService);
+
   const createBusinessSheetUseCase = new CreateBusinessSheetUseCase(
     businessSheetRepository,
-    imageUploadService,
+    businessSheetImageUploader,
   );
   const editBusinessSheetUseCase = new EditBusinessSheetUseCase(
     businessSheetRepository,
-    imageUploadService,
+    businessSheetImageUploader,
   );
   const getBusinessSheetUseCase = new GetBusinessSheetUseCase(
     businessSheetRepository,
@@ -102,7 +127,10 @@ export function setupDependencies() {
   );
   const checkSubscriptionStatusController =
     new CheckSubscriptionStatusController(checkSubscriptionStatusUseCase);
+  
 
+  
+  
   return {
     userRepository,
     tokenService,
@@ -114,5 +142,6 @@ export function setupDependencies() {
     searchUsersController,
     webhookController,
     checkSubscriptionStatusController,
+    activeUsersEmailController,
   };
 }

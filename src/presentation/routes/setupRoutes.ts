@@ -1,29 +1,36 @@
 // src/presentation/routes/setupRoutes.ts
 
 import express from "express";
-// import { dbConnectMiddleware } from '../middlewares/dbConnectMiddleware';
 import { setupBusinessSheetRoutes } from "./BusinessSheetRoutes";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { setupAuthRoutes } from "./authRoutes";
 import { setupStripeRoutes } from "./StripeRoutes";
 import { setupUserInfoRoutes } from "./userRoutes";
+import { createActiveUsersEmailRoutes } from "./activeUsersEmailRoutes";
+import { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } from '@copilotkit/runtime';
+import { LiteralClient } from '@literalai/client';
+
+const serviceAdapter = new OpenAIAdapter({
+  model: "gpt-4o-mini",
+});
+
+const literalAiClient = new LiteralClient({
+  apiKey: process.env.LITERAL_API_KEY,
+});
+
+literalAiClient.instrumentation.openai( { client: serviceAdapter } );
 
 export function setupRoutes(app: express.Application, dependencies: any) {
-  // // Apply the dbConnectMiddleware to all routes
-  // app.use(dbConnectMiddleware);
-
   app.get("/", (_, res) => res.status(200).send("OK"));
 
   app.use(
     authMiddleware(dependencies.tokenService, dependencies.userRepository),
   );
-
   app.use(
     "/create-checkout-session",
     setupStripeRoutes(dependencies.stripeController),
   );
 
-  // Business sheet routes
   app.use(
     "/business-sheets",
     setupBusinessSheetRoutes(dependencies.businessSheetController),
@@ -48,4 +55,31 @@ export function setupRoutes(app: express.Application, dependencies: any) {
   app.post("/webhook", express.raw({ type: "application/json" }), (req, res) =>
     dependencies.webhookController.handleWebhook(req, res),
   );
+
+  // Set up the CopilotKit endpoint
+
+  app.use('/copilotkit', async (req, res) => {
+    try {
+      const runtime = new CopilotRuntime();
+  
+      const handler = copilotRuntimeNodeHttpEndpoint({
+        endpoint: '/copilotkit',
+        runtime,
+        serviceAdapter,
+      });
+      await handler(req, res);
+    } catch (err) {
+      console.error("CopilotKit error:", err);
+    }
+  });
+  
+  // Add active users email routes
+  app.use(
+    "/admin/emails", 
+    createActiveUsersEmailRoutes(
+      dependencies.activeUsersEmailController 
+    )
+  );
+  
 }
+
