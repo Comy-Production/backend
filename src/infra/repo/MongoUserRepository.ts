@@ -6,6 +6,11 @@ import { PipelineStage } from "mongoose";
 import { SubscriptionStatus } from "../../domain/entities/SubscriptionStatus";
 
 export class MongoUserRepository implements IUserRepository {
+  updateUserStatus(userId: string, isOnline: boolean): Promise<boolean> {
+  console.log('Method not implemented.');
+  return Promise.resolve(false); 
+  }
+
   async create(user: User): Promise<User> {
     const newUser = new UserModel(user);
     const savedUser = await newUser.save();
@@ -26,6 +31,17 @@ export class MongoUserRepository implements IUserRepository {
 
   async findByStripeCustomerId(stripeCustomerId: string): Promise<User | null> {
     return this.findOneAndMap({ stripeCustomerId });
+  }
+
+  async findActiveUsers(): Promise<User[]> {
+    const users = await UserModel.find({
+      email: { $ne: 'virtual@chat.com' },
+      isEmailVerified: true,
+    }).exec();
+    
+    const mappedUsers = users.map(user => this.mapToDomain(user));
+
+    return mappedUsers;
   }
 
   async getAllUsersInfo(): Promise<UserInfo[]> {
@@ -117,6 +133,8 @@ export class MongoUserRepository implements IUserRepository {
       currentPeriodEnd: userDoc.currentPeriodEnd,
       subscriptionPlan: userDoc.subscriptionPlan,
       profileImageUrl: userDoc.profileImageUrl,
+      isOnline: userDoc.isOnline,
+      referrerName: userDoc.referrerName
     };
   }
 

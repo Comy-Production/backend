@@ -21,6 +21,7 @@ const UserSchema: Schema<UserDocument> = new Schema(
     verificationToken: { type: String, default: null },
     stripeCustomerId: { type: String, unique: true, sparse: true },
     stripeSubscriptionId: { type: String, unique: true, sparse: true },
+    isOnline: { type: Boolean, default: false },
     subscriptionStatus: {
       type: String,
       enum: Object.values(SubscriptionStatus),
@@ -28,6 +29,7 @@ const UserSchema: Schema<UserDocument> = new Schema(
     },
     currentPeriodEnd: { type: Date },
     subscriptionPlan: { type: String },
+    referrerName: { type: String },
   },
   { timestamps: true },
 );

@@ -7,7 +7,10 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   findByVerificationToken(token: string): Promise<User | null>;
   findByStripeCustomerId(stripeCustomerId: string): Promise<User | null>;
+  findActiveUsers(): Promise<User[]>;
   getAllUsersInfo(): Promise<UserInfo[]>;
   update(userId: string, userData: Partial<User>): Promise<void>;
+  updateUserStatus(userId: string, isOnline: boolean): Promise<boolean>;
   searchUsers(searchTerm: string): Promise<UserInfo[]>;
+  delete(id: string): Promise<void>;
 }

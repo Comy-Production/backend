@@ -2,6 +2,7 @@
 
 import { CONFIG } from "./config/config";
 import express from "express";
+import http from 'http';
 import { setupMiddlewares } from "../presentation/middlewares/setupMiddlewares";
 import { setupRoutes } from "../presentation/routes/setupRoutes";
 import { setupDependencies } from "./config/setupDependencies";
@@ -10,17 +11,21 @@ import { dbConnectMiddleware } from "../presentation/middlewares/dbConnectMiddle
 
 export async function startServer() {
   const app = express();
+  const server = http.createServer(app);
+  console.log('HTTP server created:', server.listening);
 
   // Apply the database connection middleware
   app.use(dbConnectMiddleware);
 
   setupMiddlewares(app);
   setupSwagger(app);
-  const dependencies = setupDependencies();
+
+   const dependencies = setupDependencies(server);
+
   setupRoutes(app, dependencies);
 
   return new Promise<void>((resolve) => {
-    app.listen(CONFIG.PORT, () => {
+    server.listen(CONFIG.PORT, () => {
       console.log(`Server is running on http://localhost:${CONFIG.PORT}`);
       resolve();
     });

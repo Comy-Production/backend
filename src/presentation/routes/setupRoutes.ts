@@ -8,17 +8,11 @@ import { setupStripeRoutes } from "./StripeRoutes";
 import { setupUserInfoRoutes } from "./userRoutes";
 import { createActiveUsersEmailRoutes } from "./activeUsersEmailRoutes";
 import { CopilotRuntime, OpenAIAdapter, copilotRuntimeNodeHttpEndpoint } from '@copilotkit/runtime';
-import { LiteralClient } from '@literalai/client';
+import { setupChatRoutes } from '../../chat/presentation/routes/chatRoutes';
 
 const serviceAdapter = new OpenAIAdapter({
   model: "gpt-4o-mini",
 });
-
-const literalAiClient = new LiteralClient({
-  apiKey: process.env.LITERAL_API_KEY,
-});
-
-literalAiClient.instrumentation.openai( { client: serviceAdapter } );
 
 export function setupRoutes(app: express.Application, dependencies: any) {
   app.get("/", (_, res) => res.status(200).send("OK"));
@@ -37,6 +31,12 @@ export function setupRoutes(app: express.Application, dependencies: any) {
   );
 
   app.use("/auth", setupAuthRoutes(dependencies.authController));
+  app.use('/api/chats', setupChatRoutes(
+    dependencies.chatController,
+    dependencies.messageController,
+    dependencies.respondTregarController,
+    dependencies.suggestFriendController
+  ));
 
   app.get("/check-auth", (req, res) => {
     res.json({ isAuthenticated: !!(req as any).user });

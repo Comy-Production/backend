@@ -21,6 +21,7 @@ const excludedPaths = [
   "/auth/forgot-password",
   "/copilotkit",
   "/admin/emails/active-users/email",
+  "/api/chats/send-suggested-friend",
   /^\/auth\/reset-password\/[^\/]+$/, // Matches /auth/reset-password/<token> where <token> is any non-empty string
   /^\/business-sheets\/[^\/]+$/,
 ];

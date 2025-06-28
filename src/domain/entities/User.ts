@@ -15,5 +15,8 @@ export interface User {
   stripeSubscriptionId?: string;
   subscriptionStatus: SubscriptionStatus;
   currentPeriodEnd?: Date;
-  subscriptionPlan?: String;
+  subscriptionPlan?: string;
+  isOnline: boolean;
+  referrerName?: string;
+
 }
