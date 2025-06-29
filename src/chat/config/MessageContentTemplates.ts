@@ -28,18 +28,18 @@ export const messageTemplates: MessageTemplates = {
   matchRejectedImages: {
     text: '',
     images: [
-      { imageUrl: 'https://comy-test.s3.ap-northeast-1.amazonaws.com/study-session.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
-      { imageUrl: 'https://comy-test.s3.ap-northeast-1.amazonaws.com/networking-event.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
+      { imageUrl: 'https://app.comy.jp/images/study-session.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
+      { imageUrl: 'https://app.comy.jp/images/networking-event.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
     ],
   },
   matchAcceptedConfirmation: {
     text: '${suggestedUserName}さんとのビジネスマッチができました。チャットで挨拶してみましょう。',
   },
   matchGroupIntro1: {
-    text: '${userName}さん、お世話になっております！こちら${suggestedUserCategory}カテゴリーの${suggestedUserName}さんをご紹介します！${suggestedUserCategory}カテゴリーの${suggestedUserName}さんの強みは ${companyStrengths} です！',
+    text: '${userName}さん、お世話になっております！こちら${suggestedUserCategory}カテゴリーの${suggestedUserName}さんをご紹介します！${suggestedUserCategory}カテゴリーの${suggestedUserName}さんの強みは ${suggestedUserCompanyStrengths} です！',
   },
   matchGroupIntro2: {
-    text: '${suggestedUserName}さん、お世話になっております！こちら${userCategory}カテゴリーの${userName}さんをご紹介します！${userCategory}カテゴリーの${userName}さんの強みは ${companyStrengths} です！',
+    text: '${suggestedUserName}さん、お世話になっております！こちら${userCategory}カテゴリーの${userName}さんをご紹介します！${userCategory}カテゴリーの${userName}さんの強みは ${userCompanyStrengths} です！',
   },
   matchGroupIntro3: {
     text: '是非お二人でお話をしてみてください！',
@@ -61,8 +61,8 @@ export const messageTemplates: MessageTemplates = {
   suggestionRejectedImages: {
     text: '',
     images: [
-      { imageUrl: 'https://comy-test.s3.ap-northeast-1.amazonaws.com/study-session.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
-      { imageUrl: 'https://comy-test.s3.ap-northeast-1.amazonaws.com/networking-event.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
+      { imageUrl: 'https://app.comy.jp/images/study-session.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
+      { imageUrl: 'https://app.comy.jp/images/networking-event.jpg', zoomLink: 'https://us06web.zoom.us/j/6910311031?pwd=2mPYwMkjvjOEamaT3X8F6pbmH9gJgV.1' },
     ],
   },
   suggestionAcceptedConfirmation: {
